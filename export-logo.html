@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8"/>
+  <title>FOCUS RP – Logo eksport</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet"/>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #0e0e0e;
+      color: #ddd;
+      font-family: 'Inter', sans-serif;
+      padding: 2.5rem 2rem 4rem;
+      min-height: 100vh;
+    }
+    h1 {
+      font-family: 'Orbitron', monospace;
+      font-size: 1rem;
+      font-weight: 900;
+      letter-spacing: 0.2em;
+      color: #58d68d;
+      margin-bottom: 0.4rem;
+    }
+    .page-sub {
+      color: #555;
+      font-size: 0.82rem;
+      margin-bottom: 2.5rem;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1.5rem;
+    }
+    .card {
+      background: #161616;
+      border: 1px solid #252525;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .card-preview {
+      background: repeating-conic-gradient(#1c1c1c 0% 25%, #222 0% 50%) 0 0 / 16px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      min-height: 180px;
+    }
+    .card-preview canvas {
+      display: block;
+      max-width: 100%;
+      height: auto;
+      image-rendering: -webkit-optimize-contrast;
+    }
+    .card-footer {
+      padding: 0.9rem 1.1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid #222;
+      gap: 0.5rem;
+    }
+    .card-info { flex: 1; }
+    .card-name {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #ccc;
+    }
+    .card-size {
+      font-size: 0.72rem;
+      color: #555;
+      margin-top: 2px;
+    }
+    .dl-btn {
+      background: #58d68d;
+      color: #0a1f10;
+      border: none;
+      padding: 0.45rem 1rem;
+      border-radius: 5px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: opacity 0.15s;
+    }
+    .dl-btn:hover { opacity: 0.82; }
+    #status {
+      text-align: center;
+      color: #58d68d;
+      font-size: 0.8rem;
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+
+<h1>FOCUS RP</h1>
+<p class="page-sub">Logo pakke — 6 varianter · Klikk «Last ned» på hver for PNG med gjennomsiktig bakgrunn</p>
+
+<div class="grid" id="grid"></div>
+<div id="status">Laster fonter…</div>
+
+<script>
+const GREEN = '#58d68d';
+const WHITE = '#e8e8e8';
+const GREY  = '#888';
+
+// ── Exact SVG icon from index.html ─────────────────────────────────────
+// Color can be overridden via CSS currentColor trick by replacing #58d68d
+function iconSVG(color) {
+  const c = color || '#58d68d';
+  return `<svg viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <filter id="hg" x="-20%" y="-20%" width="140%" height="140%">
+        <feGaussianBlur stdDeviation="2.5" result="b"/>
+        <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+      <filter id="cd" x="-60%" y="-60%" width="220%" height="220%">
+        <feGaussianBlur stdDeviation="3" result="b"/>
+        <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+    </defs>
+    <circle cx="48" cy="48" r="40" stroke="${c}" stroke-width="1.5" filter="url(#hg)"/>
+    <circle cx="48" cy="48" r="26" stroke="${c}" stroke-width="0.8" opacity="0.25"/>
+    <circle cx="48" cy="48" r="7" fill="${c}" filter="url(#cd)" opacity="0.8"/>
+    <circle cx="48" cy="48" r="4" fill="${c}"/>
+    <circle cx="48" cy="48" r="1.8" fill="#ffffff"/>
+    <path d="M14 30 L14 14 L30 14" stroke="${c}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M82 30 L82 14 L66 14" stroke="${c}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M14 66 L14 82 L30 82" stroke="${c}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M82 66 L82 82 L66 82" stroke="${c}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <line x1="48" y1="6"  x2="48" y2="16" stroke="${c}" stroke-width="1.2" stroke-linecap="round" opacity="0.4"/>
+    <line x1="48" y1="80" x2="48" y2="90" stroke="${c}" stroke-width="1.2" stroke-linecap="round" opacity="0.4"/>
+    <line x1="6"  y1="48" x2="16" y2="48" stroke="${c}" stroke-width="1.2" stroke-linecap="round" opacity="0.4"/>
+    <line x1="80" y1="48" x2="90" y2="48" stroke="${c}" stroke-width="1.2" stroke-linecap="round" opacity="0.4"/>
+  </svg>`;
+}
+
+// Load SVG string as Image and return Promise<HTMLImageElement>
+function loadSVG(svgStr, w, h) {
+  return new Promise(resolve => {
+    const blob = new Blob([svgStr], { type: 'image/svg+xml' });
+    const url  = URL.createObjectURL(blob);
+    const img  = new Image(w, h);
+    img.onload = () => { URL.revokeObjectURL(url); resolve(img); };
+    img.src = url;
+  });
+}
+
+// Text helpers
+function tw(c, text, fs) {
+  c.font = `900 ${fs}px Orbitron, monospace`;
+  return c.measureText(text).width;
+}
+function txt(c, text, x, y, fs, color) {
+  c.save();
+  c.font = `900 ${fs}px Orbitron, monospace`;
+  c.fillStyle = color;
+  c.textBaseline = 'middle';
+  c.textAlign = 'left';
+  c.fillText(text, x, y);
+  c.restore();
+}
+
+// ── Logo definitions ────────────────────────────────────────────────────
+const LOGOS = [
+  {
+    name: 'Horisontal — Standard',
+    desc: 'Nettsted, topptekst, banner',
+    file: 'focus-rp-horizontal.png',
+    w: 800, h: 200,
+    async draw(c, W, H) {
+      const iconS = 130, fs = 76, gap = 20;
+      const img = await loadSVG(iconSVG(), iconS * 2, iconS * 2);
+      const fW = tw(c, 'FOCUS', fs), rpW = tw(c, ' RP', fs);
+      const total = iconS + gap + fW + rpW;
+      const sx = (W - total) / 2, my = H / 2;
+      c.drawImage(img, sx, my - iconS/2, iconS, iconS);
+      txt(c, 'FOCUS', sx + iconS + gap, my, fs, GREEN);
+      txt(c, ' RP',   sx + iconS + gap + fW, my, fs, WHITE);
+    }
+  },
+  {
+    name: 'Avatar — Kvadrat',
+    desc: 'Discord server-ikon, profilbilde',
+    file: 'focus-rp-avatar.png',
+    w: 512, h: 512,
+    async draw(c, W, H) {
+      const S = W * 0.82;
+      const img = await loadSVG(iconSVG(), S * 2, S * 2);
+      c.drawImage(img, (W - S) / 2, (H - S) / 2, S, S);
+    }
+  },
+  {
+    name: 'Stacked — Kompakt',
+    desc: 'Profilbanner, kortformat',
+    file: 'focus-rp-stacked.png',
+    w: 400, h: 420,
+    async draw(c, W, H) {
+      const iconS = 200, fs = 44, fs2 = 20;
+      const img = await loadSVG(iconSVG(), iconS * 2, iconS * 2);
+      const iy = H * 0.35;
+      c.drawImage(img, (W - iconS) / 2, iy - iconS / 2, iconS, iconS);
+      c.save();
+      c.textAlign = 'center';
+      c.font = `900 ${fs}px Orbitron, monospace`;
+      c.fillStyle = GREEN;
+      c.textBaseline = 'middle';
+      c.fillText('FOCUS', W/2, iy + iconS/2 + 28);
+      c.font = `700 ${fs2}px Orbitron, monospace`;
+      c.fillStyle = GREY;
+      c.fillText('ROLLESPILL', W/2, iy + iconS/2 + 28 + fs + 6);
+      c.restore();
+    }
+  },
+  {
+    name: 'Ikon — Minimal',
+    desc: 'Favicon, liten badge, watermark',
+    file: 'focus-rp-icon.png',
+    w: 256, h: 256,
+    async draw(c, W, H) {
+      const S = W * 0.86;
+      const img = await loadSVG(iconSVG(), S * 2, S * 2);
+      c.drawImage(img, (W - S) / 2, (H - S) / 2, S, S);
+    }
+  },
+  {
+    name: 'Horisontal — Mørk bakgrunn',
+    desc: 'Discord-banner, presentasjon, ferdig til bruk',
+    file: 'focus-rp-dark-bg.png',
+    w: 800, h: 200,
+    async draw(c, W, H) {
+      c.fillStyle = '#111111';
+      c.beginPath(); c.roundRect(0, 0, W, H, 14); c.fill();
+      const iconS = 110, fs = 64, gap = 18;
+      const img = await loadSVG(iconSVG(), iconS * 2, iconS * 2);
+      const fW = tw(c, 'FOCUS', fs), rpW = tw(c, ' RP', fs);
+      const total = iconS + gap + fW + rpW;
+      const sx = (W - total) / 2, my = H / 2;
+      c.drawImage(img, sx, my - iconS/2, iconS, iconS);
+      txt(c, 'FOCUS', sx + iconS + gap, my, fs, GREEN);
+      txt(c, ' RP',   sx + iconS + gap + fW, my, fs, WHITE);
+    }
+  },
+  {
+    name: 'Monokrom — Hvit',
+    desc: 'Lys bakgrunn, trykk, klistremerker',
+    file: 'focus-rp-mono-white.png',
+    w: 800, h: 200,
+    async draw(c, W, H) {
+      const iconS = 130, fs = 76, gap = 20;
+      const img = await loadSVG(iconSVG('#ffffff'), iconS * 2, iconS * 2);
+      const fW = tw(c, 'FOCUS', fs), rpW = tw(c, ' RP', fs);
+      const total = iconS + gap + fW + rpW;
+      const sx = (W - total) / 2, my = H / 2;
+      c.drawImage(img, sx, my - iconS/2, iconS, iconS);
+      txt(c, 'FOCUS', sx + iconS + gap, my, fs, '#ffffff');
+      txt(c, ' RP',   sx + iconS + gap + fW, my, fs, 'rgba(255,255,255,0.5)');
+    }
+  },
+
+  // ── 7-18: Extra variants ─────────────────────────────────────────────
+
+  {
+    name: 'Horisontal med tagline',
+    desc: 'Nettsted header med undertekst',
+    file: 'focus-rp-tagline.png',
+    w: 800, h: 240,
+    async draw(c, W, H) {
+      const iconS = 120, fs = 68, fs2 = 15, gap = 18;
+      const img = await loadSVG(iconSVG(), iconS * 2, iconS * 2);
+      const fW = tw(c, 'FOCUS', fs), rpW = tw(c, ' RP', fs);
+      const total = iconS + gap + fW + rpW;
+      const sx = (W - total) / 2, my = H / 2 - 12;
+      c.drawImage(img, sx, my - iconS/2, iconS, iconS);
+      txt(c, 'FOCUS', sx + iconS + gap, my, fs, GREEN);
+      txt(c, ' RP',   sx + iconS + gap + fW, my, fs, WHITE);
+      c.save();
+      c.font = `500 ${fs2}px Orbitron, monospace`;
+      c.fillStyle = GREY;
+      c.textBaseline = 'middle';
+      c.textAlign = 'center';
+      c.fillText('NORSK FIVEM ROLLESPILL', W / 2, my + fs / 2 + 18);
+      c.restore();
+    }
+  },
+
+  {
+    name: 'Discord Banner',
+    desc: 'Discord server banner (960×540)',
+    file: 'focus-rp-discord-banner.png',
+    w: 960, h: 540,
+    async draw(c, W, H) {
+      c.fillStyle = '#0f0f0f';
+      c.fillRect(0, 0, W, H);
+      // grid pattern
+      c.strokeStyle = 'rgba(255,255,255,0.04)';
+      c.lineWidth = 1;
+      for (let x = 0; x < W; x += 40) { c.beginPath(); c.moveTo(x,0); c.lineTo(x,H); c.stroke(); }
+      for (let y = 0; y < H; y += 40) { c.beginPath(); c.moveTo(0,y); c.lineTo(W,y); c.stroke(); }
+      // glow
+      const grd = c.createRadialGradient(W/2, H/2, 0, W/2, H/2, 300);
+      grd.addColorStop(0, 'rgba(88,214,141,0.06)');
+      grd.addColorStop(1, 'transparent');
+      c.fillStyle = grd; c.fillRect(0, 0, W, H);
+      const iconS = 160, fs = 88, gap = 24;
+      const img = await loadSVG(iconSVG(), iconS * 2, iconS * 2);
+      const fW = tw(c, 'FOCUS', fs), rpW = tw(c, ' RP', fs);
+      const total = iconS + gap + fW + rpW;
+      const sx = (W - total) / 2, my = H / 2 - 10;
+      c.drawImage(img, sx, my - iconS/2, iconS, iconS);
+      txt(c, 'FOCUS', sx + iconS + gap, my, fs, GREEN);
+      txt(c, ' RP',   sx + iconS + gap + fW, my, fs, WHITE);
+      c.save();
+      c.font = '500 18px Orbitron, monospace';
+      c.fillStyle = 'rgba(255,255,255,0.25)';
+      c.textAlign = 'center'; c.textBaseline = 'middle';
+      c.fillText('NORSK FIVEM ROLLESPILL', W/2, my + iconS/2 + 26);
+      c.restore();
+    }
+  },
+
+  {
+    name: 'Twitter / X Header',
+    desc: 'Twitter/X profilheader (1500×500)',
+    file: 'focus-rp-twitter-header.png',
+    w: 1500, h: 500,
+    async draw(c, W, H) {
+      c.fillStyle = '#111111';
+      c.fillRect(0, 0, W, H);
+      const grd = c.createRadialGradient(W/2, H/2, 0, W/2, H/2, 500);
+      grd.addColorStop(0, 'rgba(88,214,141,0.07)');
+      grd.addColorStop(1, 'transparent');
+      c.fillStyle = grd; c.fillRect(0, 0, W, H);
+      const iconS = 180, fs = 110, gap = 28;
+      const img = await loadSVG(iconSVG(), iconS * 2, iconS * 2);
+      const fW = tw(c, 'FOCUS', fs), rpW = tw(c, ' RP', fs);
+      const total = iconS + gap + fW + rpW;
+      const sx = (W - total) / 2, my = H / 2;
+      c.drawImage(img, sx, my - iconS/2, iconS, iconS);
+      txt(c, 'FOCUS', sx + iconS + gap, my, fs, GREEN);
+      txt(c, ' RP',   sx + iconS + gap + fW, my, fs, WHITE);
+    }
+  },
+
+  {
+    name: 'Ikon — Mørk bakgrunn',
+    desc: 'Discord emoji, bot-avatar, badge',
+    file: 'focus-rp-icon-dark.png',
+    w: 512, h: 512,
+    async draw(c, W, H) {
+      c.fillStyle = '#111111';
+      c.beginPath(); c.arc(W/2, H/2, W/2, 0, Math.PI*2); c.fill();
+      const S = W * 0.72;
+      const img = await loadSVG(iconSVG(), S * 2, S * 2);
+      c.drawImage(img, (W - S) / 2, (H - S) / 2, S, S);
+    }
+  },
+
+  {
+    name: 'Kvadrat — Ikon + Tekst',
+    desc: 'Profilbilde, thumbnail',
+    file: 'focus-rp-square-text.png',
+    w: 512, h: 512,
+    async draw(c, W, H) {
+      const iconS = 220, fs = 52, fs2 = 22;
+      const img = await loadSVG(iconSVG(), iconS * 2, iconS * 2);
+      c.drawImage(img, (W - iconS) / 2, H * 0.12, iconS, iconS);
+      c.save();
+      c.textAlign = 'center'; c.textBaseline = 'middle';
+      c.font = `900 ${fs}px Orbitron, monospace`;
+      c.fillStyle = GREEN;
+      c.fillText('FOCUS', W/2, H * 0.12 + iconS + 42);
+      c.font = `900 ${fs2}px Orbitron, monospace`;
+      c.fillStyle = 'rgba(224,224,224,0.7)';
+      c.fillText('RP', W/2, H * 0.12 + iconS + 42 + fs + 8);
+      c.restore();
+    }
+  },
+
+  {
+    name: 'Monokrom — Sort',
+    desc: 'Lys bakgrunn, dokument, trykk',
+    file: 'focus-rp-mono-black.png',
+    w: 800, h: 200,
+    async draw(c, W, H) {
+      const iconS = 130, fs = 76, gap = 20;
+      const img = await loadSVG(iconSVG('#111111'), iconS * 2, iconS * 2);
+      const fW = tw(c, 'FOCUS', fs);
+      const total = iconS + gap + fW + tw(c, ' RP', fs);
+      const sx = (W - total) / 2, my = H / 2;
+      c.drawImage(img, sx, my - iconS/2, iconS, iconS);
+      txt(c, 'FOCUS', sx + iconS + gap, my, fs, '#111111');
+      txt(c, ' RP',   sx + iconS + gap + fW, my, fs, 'rgba(0,0,0,0.45)');
+    }
+  },
+
+  {
+    name: 'Wide Banner',
+    desc: 'Bred nettstedsbanner (1200×300)',
+    file: 'focus-rp-wide-banner.png',
+    w: 1200, h: 300,
+    async draw(c, W, H) {
+      c.fillStyle = '#111111';
+      c.fillRect(0, 0, W, H);
+      const gL = c.createLinearGradient(0, 0, W, 0);
+      gL.addColorStop(0, 'rgba(88,214,141,0.05)');
+      gL.addColorStop(0.5, 'rgba(88,214,141,0.02)');
+      gL.addColorStop(1, 'rgba(88,214,141,0.05)');
+      c.fillStyle = gL; c.fillRect(0, 0, W, H);
+      // side accent lines
+      c.strokeStyle = 'rgba(88,214,141,0.25)'; c.lineWidth = 1;
+      c.beginPath(); c.moveTo(0,0); c.lineTo(W,0); c.stroke();
+      c.beginPath(); c.moveTo(0,H-1); c.lineTo(W,H-1); c.stroke();
+      const iconS = 160, fs = 96, gap = 26;
+      const img = await loadSVG(iconSVG(), iconS * 2, iconS * 2);
+      const fW = tw(c, 'FOCUS', fs), rpW = tw(c, ' RP', fs);
+      const total = iconS + gap + fW + rpW;
+      const sx = (W - total) / 2, my = H / 2;
+      c.drawImage(img, sx, my - iconS/2, iconS, iconS);
+      txt(c, 'FOCUS', sx + iconS + gap, my, fs, GREEN);
+      txt(c, ' RP',   sx + iconS + gap + fW, my, fs, WHITE);
+    }
+  },
+
+  {
+    name: 'Pill / Badge',
+    desc: 'Link-preview, chat badge, sticker',
+    file: 'focus-rp-badge.png',
+    w: 440, h: 90,
+    async draw(c, W, H) {
+      c.fillStyle = '#1a1a1a';
+      c.beginPath(); c.roundRect(0, 0, W, H, H/2); c.fill();
+      c.strokeStyle = 'rgba(88,214,141,0.3)'; c.lineWidth = 1.2;
+      c.beginPath(); c.roundRect(0.6, 0.6, W-1.2, H-1.2, H/2); c.stroke();
+      const iconS = 56, fs = 30, gap = 10;
+      const img = await loadSVG(iconSVG(), iconS * 2, iconS * 2);
+      const fW = tw(c, 'FOCUS', fs), rpW = tw(c, ' RP', fs);
+      const total = iconS + gap + fW + rpW;
+      const sx = (W - total) / 2, my = H / 2;
+      c.drawImage(img, sx, my - iconS/2, iconS, iconS);
+      txt(c, 'FOCUS', sx + iconS + gap, my, fs, GREEN);
+      txt(c, ' RP',   sx + iconS + gap + fW, my, fs, WHITE);
+    }
+  },
+
+  {
+    name: 'Vertikal — Mørk bakgrunn',
+    desc: 'Portrettformat, mobilbakgrunn',
+    file: 'focus-rp-vertical-dark.png',
+    w: 400, h: 500,
+    async draw(c, W, H) {
+      c.fillStyle = '#111111';
+      c.fillRect(0, 0, W, H);
+      const grd = c.createRadialGradient(W/2, H*0.38, 0, W/2, H*0.38, 240);
+      grd.addColorStop(0, 'rgba(88,214,141,0.08)');
+      grd.addColorStop(1, 'transparent');
+      c.fillStyle = grd; c.fillRect(0, 0, W, H);
+      const iconS = 200, fs = 46, fs2 = 20;
+      const img = await loadSVG(iconSVG(), iconS * 2, iconS * 2);
+      const iy = H * 0.36;
+      c.drawImage(img, (W - iconS) / 2, iy - iconS / 2, iconS, iconS);
+      c.save();
+      c.textAlign = 'center'; c.textBaseline = 'middle';
+      c.font = `900 ${fs}px Orbitron, monospace`;
+      c.fillStyle = GREEN;
+      c.fillText('FOCUS', W/2, iy + iconS/2 + 30);
+      c.font = `900 ${fs2}px Orbitron, monospace`;
+      c.fillStyle = 'rgba(224,224,224,0.55)';
+      c.fillText('RP · NORSK FIVEM', W/2, iy + iconS/2 + 30 + fs + 10);
+      c.restore();
+    }
+  },
+
+  {
+    name: 'Ikon — Hvit bakgrunn',
+    desc: 'Lys bg, e-post signatur, dokumenter',
+    file: 'focus-rp-icon-light.png',
+    w: 512, h: 512,
+    async draw(c, W, H) {
+      c.fillStyle = '#f5f5f5';
+      c.beginPath(); c.arc(W/2, H/2, W/2, 0, Math.PI*2); c.fill();
+      const S = W * 0.72;
+      const img = await loadSVG(iconSVG('#2a7a50'), S * 2, S * 2);
+      c.drawImage(img, (W - S) / 2, (H - S) / 2, S, S);
+    }
+  },
+
+  {
+    name: 'Horisontal — Transparent mørk',
+    desc: 'Overlay på video/bilde, stream',
+    file: 'focus-rp-overlay.png',
+    w: 600, h: 120,
+    async draw(c, W, H) {
+      c.fillStyle = 'rgba(10,10,10,0.72)';
+      c.beginPath(); c.roundRect(0, 0, W, H, 10); c.fill();
+      const iconS = 72, fs = 40, gap = 14;
+      const img = await loadSVG(iconSVG(), iconS * 2, iconS * 2);
+      const fW = tw(c, 'FOCUS', fs), rpW = tw(c, ' RP', fs);
+      const total = iconS + gap + fW + rpW;
+      const sx = (W - total) / 2, my = H / 2;
+      c.drawImage(img, sx, my - iconS/2, iconS, iconS);
+      txt(c, 'FOCUS', sx + iconS + gap, my, fs, GREEN);
+      txt(c, ' RP',   sx + iconS + gap + fW, my, fs, WHITE);
+    }
+  },
+
+  {
+    name: 'Liten badge — Kompakt',
+    desc: 'Forum signatur, chat ikon (200×50)',
+    file: 'focus-rp-small-badge.png',
+    w: 200, h: 50,
+    async draw(c, W, H) {
+      c.fillStyle = '#1a1a1a';
+      c.beginPath(); c.roundRect(0, 0, W, H, 6); c.fill();
+      const iconS = 30, fs = 16, gap = 6;
+      const img = await loadSVG(iconSVG(), iconS * 2, iconS * 2);
+      const fW = tw(c, 'FOCUS', fs), rpW = tw(c, ' RP', fs);
+      const total = iconS + gap + fW + rpW;
+      const sx = (W - total) / 2, my = H / 2;
+      c.drawImage(img, sx, my - iconS/2, iconS, iconS);
+      txt(c, 'FOCUS', sx + iconS + gap, my, fs, GREEN);
+      txt(c, ' RP',   sx + iconS + gap + fW, my, fs, WHITE);
+    }
+  },
+];
+
+// ── Render ─────────────────────────────────────────────────────────────
+async function makeLogo(logo) {
+  const scale = 2;
+  const oc = document.createElement('canvas');
+  oc.width  = logo.w * scale;
+  oc.height = logo.h * scale;
+  const c = oc.getContext('2d');
+  c.scale(scale, scale);
+  await logo.draw(c, logo.w, logo.h);
+  return oc;
+}
+
+async function buildCard(logo) {
+  const card = document.createElement('div');
+  card.className = 'card';
+
+  const displayCv = document.createElement('canvas');
+  displayCv.width  = logo.w;
+  displayCv.height = logo.h;
+  displayCv.style.width = '100%';
+  displayCv.style.height = 'auto';
+  displayCv.style.maxHeight = '180px';
+
+  const preview = document.createElement('div');
+  preview.className = 'card-preview';
+  preview.appendChild(displayCv);
+
+  const footer = document.createElement('div');
+  footer.className = 'card-footer';
+  footer.innerHTML = `
+    <div class="card-info">
+      <div class="card-name">${logo.name}</div>
+      <div class="card-size">${logo.desc} · ${logo.w}×${logo.h}px</div>
+    </div>`;
+  const btn = document.createElement('button');
+  btn.className = 'dl-btn';
+  btn.textContent = 'Last ned';
+  btn.onclick = async () => {
+    btn.textContent = '…';
+    const oc = await makeLogo(logo);
+    const a  = document.createElement('a');
+    a.download = logo.file;
+    a.href = oc.toDataURL('image/png');
+    a.click();
+    btn.textContent = 'Last ned';
+  };
+  footer.appendChild(btn);
+  card.appendChild(preview);
+  card.appendChild(footer);
+
+  // Render preview
+  const oc = await makeLogo(logo);
+  displayCv.getContext('2d').drawImage(oc, 0, 0, logo.w, logo.h);
+  return card;
+}
+
+async function init() {
+  const grid = document.getElementById('grid');
+  for (const logo of LOGOS) {
+    grid.appendChild(await buildCard(logo));
+  }
+  document.getElementById('status').textContent = `✓  ${LOGOS.length} logoer klar til nedlasting`;
+}
+
+document.fonts.load('900 80px Orbitron').then(init).catch(() => setTimeout(init, 1400));
+</script>
+</body>
+</html>
