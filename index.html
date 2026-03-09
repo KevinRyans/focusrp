@@ -1165,6 +1165,33 @@
 </footer>
 
 <script>
+  // ─── LOADING SCREEN ───
+  (function () {
+    const COOLDOWN_MS = 20 * 60 * 1000; // 20 minutes
+    const KEY = 'focusrp_loader_ts';
+    const loader = document.getElementById('loader');
+    const last = Number(localStorage.getItem(KEY) || 0);
+    const now  = Date.now();
+
+    if (now - last < COOLDOWN_MS) {
+      // Within cooldown — skip instantly
+      loader.style.display = 'none';
+      return;
+    }
+
+    // Show loader, dismiss after animation
+    document.body.style.overflow = 'hidden';
+    localStorage.setItem(KEY, now);
+
+    setTimeout(() => {
+      loader.classList.add('hide');
+      document.body.style.overflow = '';
+      loader.addEventListener('transitionend', () => {
+        loader.style.display = 'none';
+      }, { once: true });
+    }, 2400);
+  })();
+
   // ─── PARTICLES ───
   const cvs = document.getElementById('bg-canvas');
   const ctx  = cvs.getContext('2d');
