@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Regler – FOCUS RP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Syne:wght@700;800&family=Orbitron:wght@700;900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --accent:       #58d68d;
+      --accent-dim:   #3aac6e;
+      --accent-glow:  rgba(88, 214, 141, 0.12);
+      --bg:           #111111;
+      --bg2:          #161616;
+      --bg3:          #1a1a1a;
+      --surface:      #1e1e1e;
+      --surface2:     #252525;
+      --border:       rgba(255, 255, 255, 0.07);
+      --border-hover: rgba(88, 214, 141, 0.3);
+      --text:         #ebebeb;
+      --text-muted:   #777;
+      --text-sub:     #aaa;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.1rem 2.5rem;
+      background: rgba(17,17,17,0.85);
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-brand { display: flex; align-items: center; gap: 0.75rem; text-decoration: none; }
+    .nav-brand-icon { width: 28px; height: 28px; flex-shrink: 0; }
+    .nav-brand-name { font-family: 'Orbitron', sans-serif; font-size: 0.95rem; font-weight: 900; letter-spacing: 0.18em; color: var(--text); }
+    .nav-brand-name span { color: var(--accent); }
+    .nav-links { display: flex; gap: 2.2rem; list-style: none; }
+    .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 0.82rem; font-weight: 500; letter-spacing: 0.04em; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--text); }
+    .nav-links a.active { color: var(--accent); }
+    .nav-btn { background: var(--accent); color: #0d1a11; padding: 0.55rem 1.3rem; border-radius: 6px; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.06em; text-decoration: none; transition: opacity 0.2s, transform 0.2s; }
+    .nav-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+
+    /* ─── LAYOUT ─── */
+    .page-wrap { display: flex; max-width: 1180px; margin: 0 auto; padding: 6.5rem 2rem 5rem; gap: 3rem; align-items: flex-start; }
+
+    /* ─── SIDEBAR ─── */
+    .sidebar { width: 220px; flex-shrink: 0; position: sticky; top: 5.5rem; height: fit-content; }
+    .sidebar-label { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.14em; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.9rem; padding-left: 0.5rem; }
+    .sidebar-nav { list-style: none; }
+    .sidebar-nav a { display: block; padding: 0.4rem 0.6rem; border-radius: 5px; color: var(--text-sub); text-decoration: none; font-size: 0.81rem; border-left: 2px solid transparent; transition: all 0.15s; }
+    .sidebar-nav a:hover { color: var(--text); background: var(--surface); border-left-color: var(--border-hover); }
+    .sidebar-nav a.active { color: var(--accent); background: var(--accent-glow); border-left-color: var(--accent); }
+    .sidebar-group { font-size: 0.68rem; font-weight: 700; color: var(--text-muted); letter-spacing: 0.1em; text-transform: uppercase; padding: 0.9rem 0.6rem 0.3rem; }
+
+    /* ─── CONTENT ─── */
+    .content { flex: 1; min-width: 0; }
+
+    .page-hero { margin-bottom: 3rem; padding-bottom: 2.5rem; border-bottom: 1px solid var(--border); }
+    .page-eyebrow { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.16em; color: var(--accent); text-transform: uppercase; margin-bottom: 0.7rem; }
+    .page-title { font-family: 'Syne', sans-serif; font-size: clamp(2rem, 4vw, 2.8rem); font-weight: 800; line-height: 1.1; margin-bottom: 1rem; }
+    .page-title em { color: var(--accent); font-style: normal; }
+    .page-intro { color: var(--text-sub); font-size: 0.92rem; line-height: 1.75; max-width: 620px; }
+    .meta-row { display: flex; gap: 0.75rem; margin-top: 1.2rem; flex-wrap: wrap; }
+    .meta-pill { font-size: 0.72rem; color: var(--text-muted); background: var(--surface); border: 1px solid var(--border); padding: 0.28rem 0.75rem; border-radius: 20px; }
+
+    /* ─── SECTION ─── */
+    .rule-section { margin-bottom: 3.5rem; scroll-margin-top: 6rem; }
+    .section-head { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 0.5rem; }
+    .section-tag { font-family: 'Orbitron', sans-serif; font-size: 0.62rem; font-weight: 700; color: var(--accent); letter-spacing: 0.1em; background: var(--accent-glow); border: 1px solid rgba(88,214,141,0.18); padding: 0.18rem 0.55rem; border-radius: 4px; }
+    .section-title { font-family: 'Syne', sans-serif; font-size: 1.35rem; font-weight: 700; }
+    .section-divider { height: 1px; background: var(--border); margin: 0.75rem 0 1.4rem; }
+    .section-lead { color: var(--text-sub); font-size: 0.88rem; line-height: 1.75; margin-bottom: 1.4rem; }
+
+    /* ─── EXPANDABLE RULE ─── */
+    .rule { margin-bottom: 0.6rem; }
+    .rule-toggle { width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.25rem; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 1rem; text-align: left; transition: border-color 0.2s, background 0.15s; }
+    .rule-toggle:hover { border-color: rgba(88,214,141,0.2); background: #202020; }
+    .rule-toggle.open { border-color: rgba(88,214,141,0.25); border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
+    .rule-toggle-left { display: flex; align-items: center; gap: 0.9rem; }
+    .rule-num { font-family: 'Orbitron', sans-serif; font-size: 0.6rem; color: var(--text-muted); letter-spacing: 0.06em; white-space: nowrap; flex-shrink: 0; }
+    .rule-name { font-weight: 500; font-size: 0.88rem; color: var(--text); }
+    .rule-toggle-right { display: flex; align-items: center; gap: 0.6rem; flex-shrink: 0; }
+    .severity { font-size: 0.63rem; font-weight: 700; letter-spacing: 0.06em; padding: 0.15rem 0.5rem; border-radius: 3px; }
+    .sev-1 { background: rgba(241,196,15,0.12); color: #f1c40f; border: 1px solid rgba(241,196,15,0.2); }
+    .sev-2 { background: rgba(230,126,34,0.12); color: #e67e22; border: 1px solid rgba(230,126,34,0.2); }
+    .sev-3 { background: rgba(231,76,60,0.12); color: #e74c3c; border: 1px solid rgba(231,76,60,0.2); }
+    .sev-perm { background: rgba(155,89,182,0.12); color: #9b59b6; border: 1px solid rgba(155,89,182,0.2); }
+    .chevron { width: 16px; height: 16px; color: var(--text-muted); transition: transform 0.2s; flex-shrink: 0; }
+    .rule-toggle.open .chevron { transform: rotate(180deg); }
+    .rule-body { display: none; background: #191919; border: 1px solid rgba(88,214,141,0.15); border-top: none; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px; padding: 1.1rem 1.25rem 1.1rem calc(0.9rem + 3.5rem); color: var(--text-sub); font-size: 0.84rem; line-height: 1.8; }
+    .rule-body.open { display: block; }
+    .rule-body p { margin-bottom: 0.6rem; }
+    .rule-body p:last-child { margin-bottom: 0; }
+    .rule-body ul { list-style: none; padding: 0; margin: 0.5rem 0; }
+    .rule-body ul li { display: flex; gap: 0.6rem; margin-bottom: 0.35rem; padding-left: 0.2rem; }
+    .rule-body ul li::before { content: '›'; color: var(--accent); flex-shrink: 0; font-weight: 700; }
+
+    /* ─── SIGNAL SYSTEM ─── */
+    .signal-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; margin-bottom: 1.5rem; }
+    .signal-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1.1rem; text-align: center; }
+    .signal-icon { width: 36px; height: 36px; border-radius: 50%; margin: 0 auto 0.6rem; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 0.85rem; }
+    .sig-gul .signal-icon { background: rgba(241,196,15,0.15); color: #f1c40f; }
+    .sig-oransje .signal-icon { background: rgba(230,126,34,0.15); color: #e67e22; }
+    .sig-rod .signal-icon { background: rgba(231,76,60,0.15); color: #e74c3c; }
+    .sig-svart .signal-icon { background: rgba(100,100,100,0.2); color: #bbb; }
+    .signal-name { font-weight: 700; font-size: 0.8rem; margin-bottom: 0.3rem; }
+    .sig-gul .signal-name { color: #f1c40f; }
+    .sig-oransje .signal-name { color: #e67e22; }
+    .sig-rod .signal-name { color: #e74c3c; }
+    .sig-svart .signal-name { color: #bbb; }
+    .signal-desc { font-size: 0.75rem; color: var(--text-muted); line-height: 1.5; }
+    .signal-note { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.25rem; font-size: 0.83rem; color: var(--text-sub); line-height: 1.7; margin-bottom: 1.5rem; }
+    .signal-note strong { color: var(--text); }
+
+    /* ─── CALLOUTS ─── */
+    .callout { border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 1.3rem; font-size: 0.84rem; line-height: 1.7; color: var(--text-sub); }
+    .callout-green { background: var(--accent-glow); border: 1px solid rgba(88,214,141,0.18); }
+    .callout-red { background: rgba(231,76,60,0.07); border: 1px solid rgba(231,76,60,0.18); }
+    .callout strong { color: var(--text); }
+
+    /* ─── FOOTER ─── */
+    footer { border-top: 1px solid var(--border); padding: 2.5rem; display: flex; align-items: center; justify-content: space-between; font-size: 0.78rem; color: var(--text-muted); }
+    .footer-brand { font-family: 'Orbitron', sans-serif; font-weight: 900; letter-spacing: 0.15em; font-size: 0.8rem; }
+    .footer-brand span { color: var(--accent); }
+    .footer-links { display: flex; gap: 2rem; list-style: none; }
+    .footer-links a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--text); }
+
+    /* ─── HEAT TABLE ─── */
+    .heat-table { width: 100%; border-collapse: collapse; font-size: 0.83rem; margin-bottom: 1.2rem; }
+    .heat-table th { text-align: left; padding: 0.55rem 1rem; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: var(--text-muted); background: var(--bg2); border-bottom: 1px solid var(--border); }
+    .heat-table td { padding: 0.7rem 1rem; border-bottom: 1px solid rgba(255,255,255,0.04); color: var(--text-sub); vertical-align: middle; }
+    .heat-table tr:last-child td { border-bottom: none; }
+    .heat-table tr:hover td { background: rgba(255,255,255,0.02); }
+    .heat-label { font-weight: 600; color: var(--text); font-size: 0.84rem; }
+    .heat-cd { font-family: 'Orbitron', sans-serif; font-size: 0.7rem; font-weight: 700; color: var(--accent); letter-spacing: 0.06em; }
+    .heat-max { font-size: 0.78rem; color: var(--text-muted); }
+
+    @media (max-width: 768px) {
+      .sidebar { display: none; }
+      .page-wrap { padding-top: 5.5rem; }
+      nav { padding: 1rem 1.25rem; }
+      .nav-links { display: none; }
+      .signal-grid { grid-template-columns: repeat(2, 1fr); }
+      footer { flex-direction: column; gap: 1rem; text-align: center; }
+      .footer-links { justify-content: center; flex-wrap: wrap; gap: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-brand">
+    <svg class="nav-brand-icon" viewBox="0 0 28 28" fill="none">
+      <circle cx="14" cy="14" r="12" stroke="#58d68d" stroke-width="1.5"/>
+      <circle cx="14" cy="14" r="4" fill="#58d68d"/>
+      <path d="M4 8 L4 4 L8 4" stroke="#58d68d" stroke-width="1.5" stroke-linecap="round"/>
+      <path d="M24 8 L24 4 L20 4" stroke="#58d68d" stroke-width="1.5" stroke-linecap="round"/>
+      <path d="M4 20 L4 24 L8 24" stroke="#58d68d" stroke-width="1.5" stroke-linecap="round"/>
+      <path d="M24 20 L24 24 L20 24" stroke="#58d68d" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+    <span class="nav-brand-name"><span>FOCUS</span> RP</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html#features">Funksjoner</a></li>
+    <li><a href="index.html#howto">Kom i gang</a></li>
+    <li><a href="index.html#community">Fellesskap</a></li>
+    <li><a href="regler.html" class="active">Regler</a></li>
+  </ul>
+  <a href="https://discord.gg/Q6bpbWcd4J" target="_blank" rel="noopener" class="nav-btn">Discord</a>
+</nav>
+
+<div class="page-wrap">
+
+  <aside class="sidebar">
+    <div class="sidebar-label">Innhold</div>
+    <ul class="sidebar-nav">
+      <li><a href="#intro">Om reglene</a></li>
+      <li><a href="#signalsystem">Signalsystemet</a></li>
+      <div class="sidebar-group">Spillerregler</div>
+      <li><a href="#atferd">Atferd & respekt</a></li>
+      <li><a href="#karakteransvar">Karakteransvar</a></li>
+      <div class="sidebar-group">RP-regler</div>
+      <li><a href="#spillverden">Spillverden</a></li>
+      <li><a href="#informasjon">Informasjon & Meta</a></li>
+      <li><a href="#vold">Vold & livsverdi</a></li>
+      <li><a href="#husker">Hukommelse (NLR)</a></li>
+      <div class="sidebar-group">Kriminalitet</div>
+      <li><a href="#krim">Kriminell RP</a></li>
+      <li><a href="#heatsystem">Heatsystemet</a></li>
+      <li><a href="#konflikter">Gjengkonflikter</a></li>
+      <li><a href="#gisler">Gisler</a></li>
+      <div class="sidebar-group">Politi</div>
+      <li><a href="#politi">Politiregler</a></li>
+    </ul>
+  </aside>
+
+  <main class="content">
+
+    <div class="page-hero" id="intro">
+      <div class="page-eyebrow">FOCUS RP — Regelverk v1.0</div>
+      <h1 class="page-title">Regler som <em>faktisk gir mening</em></h1>
+      <p class="page-intro">
+        Disse reglene eksisterer ikke for å komplisere livet ditt. De eksisterer fordi vi har bygget
+        noe vi er stolte av, og det krever at folk som spiller her tar det seriøst. Du trenger ikke
+        pugge hver setning — men du må kjenne intensjonen bak. Gjør du det, løser det meste seg selv.
+        Usikker på noe? Spør i Discord. Det er alltid bedre enn å gjette.
+      </p>
+      <div class="meta-row">
+        <span class="meta-pill">Oppdatert mars 2026</span>
+        <span class="meta-pill">Gjelder alle plattformer</span>
+        <span class="meta-pill">Spørsmål → #hjelp på Discord</span>
+      </div>
+    </div>
+
+    <!-- SIGNALSYSTEMET -->
+    <section class="rule-section" id="signalsystem">
+      <div class="section-head">
+        <span class="section-tag">SANKSJONER</span>
+        <h2 class="section-title">Signalsystemet</h2>
+      </div>
+      <div class="section-divider"></div>
+      <p class="section-lead">
+        Vi bruker et system med fire signaler. Det handler ikke om å samle poeng mot et tak —
+        det handler om at hvert signal legges til historikken din, og historikken din teller
+        når staff skal vurdere en sak. Tre gule over 60 dager veier tyngre enn én oransje.
+      </p>
+
+      <div class="signal-grid">
+        <div class="signal-card sig-gul">
+          <div class="signal-icon">!</div>
+          <div class="signal-name">Gult signal</div>
+          <div class="signal-desc">Advarsel. Noteres i historikken. Aktiv i 60 dager.</div>
+        </div>
+        <div class="signal-card sig-oransje">
+          <div class="signal-icon">!!</div>
+          <div class="signal-name">Oransje signal</div>
+          <div class="signal-desc">Midlertidig utestengelse 12–72 timer. Vurderes individuelt.</div>
+        </div>
+        <div class="signal-card sig-rod">
+          <div class="signal-icon">!!!</div>
+          <div class="signal-name">Rødt signal</div>
+          <div class="signal-desc">Utestengelse 7–30 dager. Krever dialog med staff.</div>
+        </div>
+        <div class="signal-card sig-svart">
+          <div class="signal-icon">✕</div>
+          <div class="signal-name">Svart signal</div>
+          <div class="signal-desc">Permanent utestengelse fra alle plattformer.</div>
+        </div>
+      </div>
+
+      <div class="signal-note">
+        <strong>Slik fungerer historikken:</strong> Gult signal er aktivt i 60 dager, oransje i 90 dager. Rødt signal er permanent i historikken, men teller ikke lenger mot nye sanksjoner etter 6 måneder — med mindre det skjer noe nytt. Staff ser alltid hele bildet, ikke bare siste hendelse. Gjentakende atferd eskalerer alltid.
+      </div>
+    </section>
+
+    <!-- ATFERD -->
+    <section class="rule-section" id="atferd">
+      <div class="section-head">
+        <span class="section-tag">SPILLERREGLER</span>
+        <h2 class="section-title">Atferd & respekt</h2>
+      </div>
+      <div class="section-divider"></div>
+      <p class="section-lead">Dette gjelder deg som person — ikke karakteren din.</p>
+
+      <div class="rule">
+        <button class="rule-toggle" onclick="toggleRule(this)">
+          <div class="rule-toggle-left"><span class="rule-num">R-01</span><span class="rule-name">Behandle folk som folk</span></div>
+          <div class="rule-toggle-right"><span class="severity sev-3">RØDT</span><svg class="chevron" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </button>
+        <div class="rule-body">
+          <p>Trakassering, rasisme, personangrep eller målrettet mobbing tolereres ikke — uansett om det skjer in character, out of character, på Discord eller andre steder med tilknytning til FOCUS. Vi er alle her fordi vi vil ha det bra.</p>
+          <p>Å gjemme seg bak "det var bare RP" er ikke en unnskyldning. Staff vurderer intensjonen, ikke pakkeringen.</p>
+        </div>
+      </div>
+
+      <div class="rule">
+        <button class="rule-toggle" onclick="toggleRule(this)">
+          <div class="rule-toggle-left"><span class="rule-num">R-02</span><span class="rule-name">Staff har siste ord — i øyeblikket</span></div>
+          <div class="rule-toggle-right"><span class="severity sev-2">ORANSJE</span><svg class="chevron" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </button>
+        <div class="rule-body">
+          <p>Når staff griper inn i en situasjon, følger du instruksjonene uten å diskutere der og da. Er du uenig, tar du det opp i klagekanalen på Discord etterpå — rolig og saklig. Å protestere høylytt i spill eller sende sure DM-er til staff eskalerer saken din, det gjør den ikke bedre.</p>
+        </div>
+      </div>
+
+      <div class="rule">
+        <button class="rule-toggle" onclick="toggleRule(this)">
+          <div class="rule-toggle-left"><span class="rule-num">R-03</span><span class="rule-name">Cheating og juks</span></div>
+          <div class="rule-toggle-right"><span class="severity sev-perm">PERMANENT</span><svg class="chevron" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </button>
+        <div class="rule-body">
+          <p>Cheat-programvare, modifikasjoner som gir deg en fordel over andre, eller bevisst utnyttelse av bugs for personlig vinning er permanent utestengelse uten unntak. Det gjelder også å hjelpe andre med å jukse eller dele metoder for det.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- KARAKTERANSVAR -->
+    <section class="rule-section" id="karakteransvar">
+      <div class="section-head">
+        <span class="section-tag">SPILLERREGLER</span>
+        <h2 class="section-title">Karakteransvar</h2>
+      </div>
+      <div class="section-divider"></div>
+      <p class="section-lead">Du er ansvarlig for hva karakteren din gjør — og for at den gir mening.</p>
+
+      <div class="rule">
+        <button class="rule-toggle" onclick="toggleRule(this)">
+          <div class="rule-toggle-left"><span class="rule-num">R-04</span><span class="rule-name">Karakteren din er en ekte person</span></div>
+          <div class="rule-toggle-right"><span class="severity sev-1">GULT</span><svg class="chevron" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </button>
+        <div class="rule-body">
+          <p>Karakteren din har en bakgrunn, en personlighet og begrensninger. De handler ikke irrasjonelt bare fordi du synes det hadde vært kult. En kontorarbeider med null kriminell historikk kjøper ikke umiddelbart maskingevær. En som er alvorlig skadet, kjører ikke av gårde i 200 km/t.</p>
+          <p>Hvis handlingen ikke gir mening for karakteren, er det sannsynligvis FailRP. Noen klassiske eksempler:</p>
+          <ul>
+            <li>Hoppe fra bro eller tak for å unnslippe politiet</li>
+            <li>Kjøre eller sprinte rett etter å ha blitt skutt eller overfalt</li>
+            <li>Ignorere klare trusler fordi du "vet" at motparten ikke skyter</li>
+            <li>Bytte fullstendig personlighet fra scene til scene uten in-character grunn</li>
+            <li>Bruke emotes eller animasjoner som bryter med det som faktisk skjer</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="rule">
+        <button class="rule-toggle" onclick="toggleRule(this)">
+          <div class="rule-toggle-left"><span class="rule-num">R-05</span><span class="rule-name">Ikke forlat aktive situasjoner</span></div>
+          <div class="rule-toggle-right"><span class="severity sev-2">ORANSJE</span><svg class="chevron" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </button>
+        <div class="rule-body">
+          <p>Det er ikke tillatt å logge ut eller forlate spillet midt i en RP-situasjon for å unnslippe konsekvensene. Skjer det uplanlagt — tekniske problemer, strømstans — ta kontakt med staff etterpå og forklar situasjonen.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SPILLVERDEN -->
+    <section class="rule-section" id="spillverden">
+      <div class="section-head">
+        <span class="section-tag">RP-REGLER</span>
+        <h2 class="section-title">Spillverden & RP-kvalitet</h2>
+      </div>
+      <div class="section-divider"></div>
+
+      <div class="rule">
+        <button class="rule-toggle" onclick="toggleRule(this)">
+          <div class="rule-toggle-left"><span class="rule-num">R-06</span><span class="rule-name">La situasjoner bygge seg opp</span></div>
+          <div class="rule-toggle-right"><span class="severity sev-1">GULT</span><svg class="chevron" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </button>
+        <div class="rule-body">
+          <p>Konflikter oppstår ikke ut av ingenting — de vokser frem. Du starter ikke med de tyngste virkemidlene. Ord kommer før trusler, trusler før vold, og vold er alltid siste utvei. Det betyr ikke at alt trenger å ta evig tid, men at du gir andre en reell sjanse til å delta i situasjonen.</p>
+        </div>
+      </div>
+
+      <div class="rule">
+        <button class="rule-toggle" onclick="toggleRule(this)">
+          <div class="rule-toggle-left"><span class="rule-num">R-07</span><span class="rule-name">OOC holdes utenfor spillet</span></div>
+          <div class="rule-toggle-right"><span class="severity sev-1">GULT</span><svg class="chevron" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </button>
+        <div class="rule-body">
+          <p>Out of character-kommunikasjon i spill skal begrenses til absolutte nødsituasjoner — tekniske problemer, noe som ikke kan løses in-character. Bruk /ooc dersom nødvendig, og hold det kort. Å kommentere andres RP, diskutere regelbrudd midt i en scene eller ventilere frustrasjon inn i chatten ødelegger opplevelsen for alle rundt deg.</p>
+        </div>
+      </div>
+
+      <div class="rule">
+        <button class="rule-toggle" onclick="toggleRule(this)">
+          <div class="rule-toggle-left"><span class="rule-num">R-08</span><span class="rule-name">Greenzone-respekt</span></div>
+          <div class="rule-toggle-right"><span class="severity sev-2">ORANSJE</span><svg class="chevron" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </button>
+        <div class="rule-body">
+          <p>Greenzones er sikre soner — sykehus og respawnpunkter. Her er det ikke tillatt å starte konflikter, true noen eller bruke vold. Du kan heller ikke bruke en greenzone som fluktmulighet fra en aktiv konfrontasjon. Starter du noe, tar du konsekvensene.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- INFORMASJON -->
+    <section class="rule-section" id="informasjon">
+      <div class="section-head">
+        <span class="section-tag">RP-REGLER</span>
+        <h2 class="section-title">Informasjon & Metagaming</h2>
+      </div>
+      <div class="section-divider"></div>
+
+      <div class="callout callout-red">
+        <strong>Metagaming</strong> er å bruke informasjon karakteren din ikke kan vite om til å ta beslutninger i spillet. Det er blant det mest ødeleggende du kan gjøre mot andres spillopplevelse — fordi det fjerner troverdigheten fra alle scenariene rundt deg.
+      </div>
+
+      <div class="rule">
+        <button class="rule-toggle" onclick="toggleRule(this)">
+          <div class="rule-toggle-left"><span class="rule-num">R-09</span><span class="rule-name">Ingen ekstern koordinering i aktive situasjoner</span></div>
+          <div class="rule-toggle-right"><span class="severity sev-3">RØDT</span><svg class="chevron" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </button>
+        <div class="rule-body">
+          <p>Mens en in-game situasjon pågår, er det ikke tillatt å dele informasjon om den via Discord, telefon, stream-chat eller andre kanaler. Er du i en biljakt, kan du ikke fortelle kompisen på Discord nøyaktig hvor politiet er. Er du tatt til fange, kan du ikke varsle gjengen via ekstern kanal.</p>
+        </div>
+      </div>
+
+      <div class="rule">
+        <button class="rule-toggle" onclick="toggleRule(this)">
+          <div class="rule-toggle-left"><span class="rule-num">R-10</span><span class="rule-name">Karakteren vet kun det karakteren vet</span></div>
+          <div class="rule-toggle-right"><span class="severity sev-2">ORANSJE</span><svg class="chevron" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </button>
+        <div class="rule-body">
+          <p>Du kan ikke bruke spillernavn fra HUD, kartsymboler, eller informasjon du som spiller vet men karakteren din aldri har fått vite. Har karakteren din aldri truffet personen — vet ikke karakteren hvem det er. Det inkluderer å gjenkjenne folk på stemmen, bruke wanted-lista uten in-game grunn, eller handle på bakgrunn av ting du hørte folk si utenfor spillet.</p>
+        </div>
+      </div>
+
+      <div class="rule">
+        <button class="rule-toggle" onclick="toggleRule(this)">
+          <div class="rule-toggle-left"><span class="rule-num">R-11</span><span class="rule-name">Stream sniping</span></div>
+          <div class="rule-toggle-right"><span class="severity sev-3">RØDT</span><svg class="chevron" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </button>
+        <div class="rule-body">
+          <p>Å følge med på en annens stream for å finne posisjon, planer eller informasjon som du deretter bruker mot dem in-game er metagaming. Det spiller ingen rolle om det var "tilfeldig" eller om du "bare så på for underholdning".</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- VOLD -->
+    <section class="rule-section" id="vold">
+      <div class="section-head">
+        <span class="section-tag">RP-REGLER</span>
+        <h2 class="section-title">Vold & livsverdi</h2>
+      </div>
+      <div class="section-divider"></div>
+
+      <div class="rule">
+        <button class="rule-toggle" onclick="toggleRule(this)">
+          <div class="rule-toggle-left"><span class="rule-num">R-12</span><span class="rule-name">Vold trenger en grunn</span></div>
+          <div class="rule-toggle-right"><span class="severity sev-3">RØDT</span><svg class="chevron" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </button>
+        <div class="rule-body">
+          <p>Du kan ikke angripe, skyte eller kjøre på andre spillere uten at det ligger en troverdig, etablert in-character grunn til grunn. "Jeg ville teste pistolen" er ikke en grunn. Det gjelder også kjøretøy — å bruke bil som våpen med hensikt behandles like alvorlig.</p>
+        </div>
+      </div>
+
+      <div class="rule">
+        <button class="rule-toggle" onclick="toggleRule(this)">
+          <div class="rule-toggle-left"><span class="rule-num">R-13</span><span class="rule-name">Karakteren frykter for livet sitt</span></div>
+          <div class="rule-toggle-right"><span class="severity sev-2">ORANSJE</span><svg class="chevron" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </button>
+        <div class="rule-body">
+          <p>Ingen vil dø. Karakteren din tar ikke unødvendige risikoer og reagerer med frykt når livet er i fare. Stikker noen ladd pistol mot hodet ditt løper du ikke. Angrepet av fem mot en vurderer du flukt, ikke kamp. Livsverdi gjelder proporsjonalt — en garvet kriminell har andre terskler enn en sivil.</p>
+          <ul>
+            <li>Du er i FearRP når noen retter ladd våpen mot deg på under 10 meter og har klar siktlinje</li>
+            <li>FearRP brytes hvis du er i kjøretøy og har mulighet til å kjøre — da kan du forsøke flukt</li>
+            <li>Overtallige situasjoner (3+ mot deg) utløser automatisk livsverdi uansett bevæpning</li>
+            <li>Å late som ingenting og bare gå videre fordi du er "ikke redd" er FailRP</li>
+            <li>Karakteren kan velge å kjempe tilbake — men det skal koste noe, og det skal RP-es</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="rule">
+        <button class="rule-toggle" onclick="toggleRule(this)">
+          <div class="rule-toggle-left"><span class="rule-num">R-14</span><span class="rule-name">Ikke tving handlinger frem (Powergaming)</span></div>
+          <div class="rule-toggle-right"><span class="severity sev-2">ORANSJE</span><svg class="chevron" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </button>
+        <div class="rule-body">
+          <p>Du kan ikke bruke spillmekanikker på en måte som gir deg urimelig fordel, eller tvinge frem et utfall uten å la andre reagere. Du kan ikke bare "bestemme" at noe skjer — du RP-er det frem og gir andre rom til å delta. Fortell hva du prøver å gjøre, og la motparten reagere.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- NLR -->
+    <section class="rule-section" id="husker">
+      <div class="section-head">
+        <span class="section-tag">RP-REGLER</span>
+        <h2 class="section-title">Hukommelse etter død</h2>
+      </div>
+      <div class="section-divider"></div>
+
+      <div class="rule">
+        <button class="rule-toggle" onclick="toggleRule(this)">
+          <div class="rule-toggle-left"><span class="rule-num">R-15</span><span class="rule-name">New Life Rule — nytt kapittel</span></div>
+          <div class="rule-toggle-right"><span class="severity sev-2">ORANSJE</span><svg class="chevron" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </button>
+        <div class="rule-body">
+          <p>Dør karakteren din og du respawner, begynner et nytt kapittel. Karakteren husker ikke hva som skjedde — ikke hvem som drepte dem, ikke hva som ble sagt, ikke nøyaktig hvor det skjedde. Du kan ikke gå tilbake for å hevne deg eller hente utstyr du mistet.</p>
+          <ul>
+            <li>Vent minst 15 minutter før du returnerer til området der du døde</li>
+            <li>Hold deg minst 150 meter unna stedet i ventetiden</li>
+            <li>NLR gjelder ikke der karakteren bevisst ble levert til sykehus — da husker de</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- KRIM -->
+    <section class="rule-section" id="krim">
+      <div class="section-head">
+        <span class="section-tag">KRIMINALITET</span>
+        <h2 class="section-title">Kriminell RP</h2>
+      </div>
+      <div class="section-divider"></div>
+
+      <div class="callout callout-green">
+        Kriminell RP er en av de mest engasjerende delene av serveren. Det stilles bare høyere krav: du tenker, planlegger og lever med konsekvensene. En god kriminell karakter er tredimensjonal — ikke bare en skytemaskin.
+      </div>
+
+      <div class="rule">
+        <button class="rule-toggle" onclick="toggleRule(this)">
+          <div class="rule-toggle-left"><span class="rule-num">R-16</span><span class="rule-name">Kriminalitet krever motivasjon</span></div>
+          <div class="rule-toggle-right"><span class="severity sev-1">GULT</span><svg class="chevron" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </button>
+        <div class="rule-body">
+          <p>Bak enhver kriminell handling skal det ligge en in-character grunn. Penger, territorium, gjeld, lojalitet — noe. Du raner ikke tilfeldige folk fordi du kjedet deg. Motivasjonen trenger ikke å være komplisert, men den må eksistere.</p>
+        </div>
+      </div>
+
+      <div class="rule">
+        <button class="rule-toggle" onclick="toggleRule(this)">
+          <div class="rule-toggle-left"><span class="rule-num">R-17</span><span class="rule-name">Ran — fremgangsmåte</span></div>
+          <div class="rule-toggle-right"><span class="severity sev-2">ORANSJE</span><svg class="chevron" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </button>
+        <div class="rule-body">
+          <p>Et ran er ikke to ord og et trukket våpen. Du setter opp situasjonen, gir personen tid til å reagere, og gjennomfører det på en måte som gir narrativ mening.</p>
+          <ul>
+            <li>Ikke ran nyinnkomne spillere med standard nybegynner-outfit</li>
+            <li>Ikke ran samme person mer enn én gang innen to timer</li>
+            <li>Maks tre mot én i ranssituasjoner</li>
+            <li>Krev aldri Discord-brukernavn, passord eller personlig informasjon</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="rule">
+        <button class="rule-toggle" onclick="toggleRule(this)">
+          <div class="rule-toggle-left"><span class="rule-num">R-18</span><span class="rule-name">Ta konsekvensene</span></div>
+          <div class="rule-toggle-right"><span class="severity sev-2">ORANSJE</span><svg class="chevron" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </button>
+        <div class="rule-body">
+          <p>Planlegger du noe kriminelt, planlegger du også for at det kan gå galt. Arrestasjon, fengsling, tap av utstyr — dette er ikke feil, det er historien. RP deg gjennom det. Å avbryte RP fordi du ikke liker utfallet er FailRP og en av de raskeste måtene å få et oransje signal på.</p>
+        </div>
+      </div>
+
+      <div class="rule">
+        <button class="rule-toggle" onclick="toggleRule(this)">
+          <div class="rule-toggle-left"><span class="rule-num">R-19</span><span class="rule-name">Maks 8 deltakere per kriminell aksjon</span></div>
+          <div class="rule-toggle-right"><span class="severity sev-2">ORANSJE</span><svg class="chevron" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </button>
+        <div class="rule-body">
+          <p>Ved all organisert kriminell aktivitet — ran, heist, overfall, gjengoperasjoner — er maksimalt 8 personer tillatt på kriminell side. Det inkluderer alle som aktivt deltar, overvåker, kjører fluktbil eller på annen måte er en del av aksjonen.</p>
+          <ul>
+            <li>Folk som "bare sitter i nærheten" men koordinerer via Discord teller med</li>
+            <li>Å splitte opp i grupper for å omgå regelen og slå seg sammen under aksjonen er ikke tillatt</li>
+            <li>Politiet kan heller ikke møte opp med mer enn 8 tjenestemenn per hendelse</li>
+            <li>Ved større serveromfattende hendelser kan staff gi unntak — søk på forhånd</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- HEATSYSTEM -->
+    <section class="rule-section" id="heatsystem">
+      <div class="section-head">
+        <span class="section-tag">KRIMINALITET</span>
+        <h2 class="section-title">Heatsystemet</h2>
+      </div>
+      <div class="section-divider"></div>
+      <p class="section-lead">
+        For å unngå at serveren oppleves som én lang rekke av ran etter ran, opererer vi med nedkjølingstider per rantype. Når et ran er gjennomført, gjelder en cooldown for hele serveren — ikke bare for gjengen som gjorde det. Dette tvinger frem variasjon og gjør hvert ran mer meningsfylt.
+      </p>
+
+      <table class="heat-table">
+        <thead>
+          <tr>
+            <th>Type</th>
+            <th>Cooldown</th>
+            <th>Maks deltakere (krim)</th>
+            <th>Maks respons (politi)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="heat-label">Butikkran</span></td>
+            <td><span class="heat-cd">30 MIN</span></td>
+            <td><span class="heat-max">3 personer</span></td>
+            <td><span class="heat-max">4 betjenter</span></td>
+          </tr>
+          <tr>
+            <td><span class="heat-label">Varehusran / narkotikaoperasjon</span></td>
+            <td><span class="heat-cd">1 TIME</span></td>
+            <td><span class="heat-max">5 personer</span></td>
+            <td><span class="heat-max">6 betjenter</span></td>
+          </tr>
+          <tr>
+            <td><span class="heat-label">Bankran (liten bank)</span></td>
+            <td><span class="heat-cd">2 TIMER</span></td>
+            <td><span class="heat-max">6 personer</span></td>
+            <td><span class="heat-max">8 betjenter</span></td>
+          </tr>
+          <tr>
+            <td><span class="heat-label">Bankran (stor bank / Fleeca)</span></td>
+            <td><span class="heat-cd">3 TIMER</span></td>
+            <td><span class="heat-max">8 personer</span></td>
+            <td><span class="heat-max">8 betjenter</span></td>
+          </tr>
+          <tr>
+            <td><span class="heat-label">Større heist / serveromfattende hendelse</span></td>
+            <td><span class="heat-cd">6 TIMER</span></td>
+            <td><span class="heat-max">8 personer</span></td>
+            <td><span class="heat-max">8 betjenter</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="rule">
+        <button class="rule-toggle" onclick="toggleRule(this)">
+          <div class="rule-toggle-left"><span class="rule-num">R-22</span><span class="rule-name">Heatregler i praksis</span></div>
+          <div class="rule-toggle-right"><span class="severity sev-2">ORANSJE</span><svg class="chevron" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </button>
+        <div class="rule-body">
+          <p>Cooldown starter i det ranet er i gang — ikke når det er ferdig. Det er ingen poeng i å starte et nytt ran rett etterpå for å "rekke det" før nedkjølingstiden telles opp.</p>
+          <ul>
+            <li>Staff fører oversikt over ran-tidspunkter</li>
+            <li>Mislykkede ran teller også — å prøve seg og bli stoppet av politiet bruker fortsatt cooldown</li>
+            <li>Ikke lov å starte ett ran mens et annet av samme type pågår på serveren</li>
+            <li>Usikker på om cooldown er over? Spør i Discord — bedre enn å anta</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- KONFLIKTER -->
+    <section class="rule-section" id="konflikter">
+      <div class="section-head">
+        <span class="section-tag">KRIMINALITET</span>
+        <h2 class="section-title">Gjengkonflikter</h2>
+      </div>
+      <div class="section-divider"></div>
+
+      <div class="rule">
+        <button class="rule-toggle" onclick="toggleRule(this)">
+          <div class="rule-toggle-left"><span class="rule-num">R-20</span><span class="rule-name">Konflikter bygges — de skjer ikke bare</span></div>
+          <div class="rule-toggle-right"><span class="severity sev-2">ORANSJE</span><svg class="chevron" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </button>
+        <div class="rule-body">
+          <p>En gjengkonflikt starter ikke fordi noen kikket feil på deg. Det er resultatet av en eskalering over tid. For at skytevåpen skal brukes i en gjengkrig må det ligge etablert konflikthistorie til grunn, og det anbefales å informere staff på forhånd.</p>
+          <ul>
+            <li>Shoot-on-sight krever godkjenning fra staff</li>
+            <li>Krig gjelder mellom spesifikke grupperinger — ikke mot tilfeldige sivile</li>
+            <li>Konflikter skal ha en narrativ avslutning — ikke bare pågå i det uendelige</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- GISLER -->
+    <section class="rule-section" id="gisler">
+      <div class="section-head">
+        <span class="section-tag">KRIMINALITET</span>
+        <h2 class="section-title">Gisler & frihetsberøvelse</h2>
+      </div>
+      <div class="section-divider"></div>
+
+      <div class="rule">
+        <button class="rule-toggle" onclick="toggleRule(this)">
+          <div class="rule-toggle-left"><span class="rule-num">R-21</span><span class="rule-name">Et gissel er en person — ikke en brikke</span></div>
+          <div class="rule-toggle-right"><span class="severity sev-2">ORANSJE</span><svg class="chevron" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </button>
+        <div class="rule-body">
+          <p>Å ta noen som gissel er en alvorlig in-character handling og krever at du RP-er det ordentlig. Gisselet er ikke et levende skjold — det er en skremt person som skal få rom til å delta i situasjonen.</p>
+          <ul>
+            <li>Ikke hold samme person som gissel mer enn én gang per dag</li>
+            <li>Maksimal holdetid er 90 minutter — med mindre gisselet aktivt ønsker å fortsette</li>
+            <li>Gisselet kan alltid si stopp out of character. Det respekteres umiddelbart</li>
+            <li>Vold mot gisselet skal RP-es — ikke bare skje</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- POLITI -->
+    <section class="rule-section" id="politi">
+      <div class="section-head">
+        <span class="section-tag">POLITI</span>
+        <h2 class="section-title">Politiregler</h2>
+      </div>
+      <div class="section-divider"></div>
+      <p class="section-lead">
+        Å spille politi på FOCUS er ikke en maktposisjon — det er en RP-rolle med like stort ansvar som kriminelle karakterer. Politiet skal bidra til gode historier, ikke bare fungere som et motstandsteam. Dårlig politi-RP ødelegger like mye som dårlig krim-RP.
+      </p>
+
+      <div class="rule">
+        <button class="rule-toggle" onclick="toggleRule(this)">
+          <div class="rule-toggle-left"><span class="rule-num">R-23</span><span class="rule-name">Politi er en RP-rolle — ikke en spillfordel</span></div>
+          <div class="rule-toggle-right"><span class="severity sev-2">ORANSJE</span><svg class="chevron" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </button>
+        <div class="rule-body">
+          <p>Politirollen gir deg tilgang til ressurser og informasjon som andre karakterer ikke har. Det er et verktøy for RP — ikke en vei til å "vinne". Utnytter du politikarakteren for personlig vinning utenfor RP-sammenheng, er det et alvorlig brudd.</p>
+          <ul>
+            <li>Ikke bruk politikarakteren til å spionere på spillere du kjenner OOC</li>
+            <li>Informasjon du får som politi kan ikke overføres til kriminelle karakterer du også spiller</li>
+            <li>Politiet skal etterleve de samme grunnleggende RP-reglene som alle andre</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="rule">
+        <button class="rule-toggle" onclick="toggleRule(this)">
+          <div class="rule-toggle-left"><span class="rule-num">R-24</span><span class="rule-name">Proporsjonalitet — ikke skyt først</span></div>
+          <div class="rule-toggle-right"><span class="severity sev-2">ORANSJE</span><svg class="chevron" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </button>
+        <div class="rule-body">
+          <p>Politiets respons skal stå i forhold til situasjonen. En trafikkontroll eskalerer ikke til dratte våpen. En mistenkt som stikker av til fots skytes ikke i ryggen uten forvarsel. Eskaleringsprinsippet gjelder like mye for politiet som for alle andre.</p>
+          <ul>
+            <li>Bruk av dødelig makt krever klar og umiddelbar trussel mot liv</li>
+            <li>Forsøk alltid verbal kontakt og kommandoer før fysisk inngripen</li>
+            <li>Høyrisikovåpen (automatvåpen osv.) tas kun frem ved tilsvarende trussel fra motpart</li>
+            <li>Å drepe når du kunne pågrepet er FailRP — med mindre liv var i umiddelbar fare</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="rule">
+        <button class="rule-toggle" onclick="toggleRule(this)">
+          <div class="rule-toggle-left"><span class="rule-num">R-25</span><span class="rule-name">Behandling av pågrepne</span></div>
+          <div class="rule-toggle-right"><span class="severity sev-2">ORANSJE</span><svg class="chevron" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </button>
+        <div class="rule-body">
+          <p>Arresterte spillere har krav på ordentlig RP. Det inkluderer at de blir informert om hva de er pågrepet for, får mulighet til å reagere og snakke, og at situasjonen ikke bare avsluttes med at de kastes i fengsel uten noen form for interaksjon.</p>
+          <ul>
+            <li>Bruk av overdreven vold mot pågrepne som ikke motstand er forbudt</li>
+            <li>Fengslingstid skal RP-es — ikke bare settes til maks og logges ut</li>
+            <li>Pågrepne har rett til å kontakte advokat in-character dersom det er etablert på serveren</li>
+            <li>Ikke hån eller mobbe pågrepne OOC etter en hendelse</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="rule">
+        <button class="rule-toggle" onclick="toggleRule(this)">
+          <div class="rule-toggle-left"><span class="rule-num">R-26</span><span class="rule-name">Korrupsjon og rolleplay som korrupt betjent</span></div>
+          <div class="rule-toggle-right"><span class="severity sev-1">GULT</span><svg class="chevron" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </button>
+        <div class="rule-body">
+          <p>Korrupt politi-RP er tillatt og kan skape fantastiske historier — men det krever godkjenning fra staff på forhånd. Det er en rolle med stor innvirkning på serverens dynamikk og skal ikke tas lett på.</p>
+          <ul>
+            <li>Søk staff om tillatelse før du begynner korrupt RP over tid</li>
+            <li>Korrupsjon skal ha en in-character forankring — ikke bare "fordi det er gøy"</li>
+            <li>Å selge politiinformasjon til kriminelle uten godkjenning er regelbrudd, ikke RP</li>
+            <li>Korrupte betjenter kan fremdeles ikke bryte de grunnleggende RP-reglene</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="rule">
+        <button class="rule-toggle" onclick="toggleRule(this)">
+          <div class="rule-toggle-left"><span class="rule-num">R-27</span><span class="rule-name">Gisselforhandlinger og ranssituasjoner</span></div>
+          <div class="rule-toggle-right"><span class="severity sev-1">GULT</span><svg class="chevron" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </button>
+        <div class="rule-body">
+          <p>Når kriminelle tar gisler eller setter i gang ran, har politiet plikt til å RP-e situasjonen ordentlig. Det betyr forhandlinger, vurdering av alternativer og ikke bare storme inn med full styrke fordi det er enklest.</p>
+          <ul>
+            <li>Politiet skal alltid forsøke dialog med gjerningspersoner før storming</li>
+            <li>Gisselsituasjoner skal gi kriminelle en reell sjanse til å fullføre forhandlingene</li>
+            <li>Politiet kan ikke snikskyte eller drep gjerningspersoner uten forutgående RP — med mindre gisselet er i umiddelbar livsfare</li>
+            <li>Maks 8 betjenter per ranssituasjon — se heattabell for detaljer</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<footer>
+  <div class="footer-brand"><span>FOCUS</span> ROLLESPILL</div>
+  <ul class="footer-links">
+    <li><a href="index.html#features">Funksjoner</a></li>
+    <li><a href="index.html#howto">Kom i gang</a></li>
+    <li><a href="regler.html">Regler</a></li>
+    <li><a href="https://discord.gg/Q6bpbWcd4J" target="_blank" rel="noopener">Discord</a></li>
+  </ul>
+  <span>© 2026 FOCUS RP | UTVIKLET AV FIRIX.NO</span>
+</footer>
+
+<script>
+  function toggleRule(btn) {
+    const body = btn.nextElementSibling;
+    const isOpen = btn.classList.contains('open');
+    btn.classList.toggle('open', !isOpen);
+    body.classList.toggle('open', !isOpen);
+  }
+
+  const sections = document.querySelectorAll('.rule-section');
+  const sideLinks = document.querySelectorAll('.sidebar-nav a');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        sideLinks.forEach(l => {
+          l.classList.toggle('active', l.getAttribute('href') === '#' + e.target.id);
+        });
+      }
+    });
+  }, { rootMargin: '-20% 0px -65% 0px' });
+  sections.forEach(s => observer.observe(s));
+</script>
+
+</body>
+</html>
